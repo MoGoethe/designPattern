@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	
+<script>
+/*
+	单例模式
+	保证一个类仅有一个实例，并提供一个全局访问接口
+*/
+
+//fisrt：
+//	var Singleton = function(name){
+//		this.name = name;
+//		this.instance = null;
+//	};
+//	Singleton.prototype.name = function(){
+//		return this.name;
+//	};
+//	Singleton.getInstance = function(name){
+//		if(!this.instance){
+//			this.instance = new Singleton(name);
+//		}
+//		return this.instance;
+//	}
+
+//second
+	var Singleton = function(name){
+		this.name =name;
+	};
+	Singleton.prototype.getName = function(){
+		return this.name;
+	}
+	Singleton.getInstance = (function(){
+		var instance = null;
+		return function(name){
+			if(!instance){
+				instance = new Singleton(name);
+			}
+			return instance;
+		}
+	})
+
+</script>
+</body>
+</html>
