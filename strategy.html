@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	
+<script>
+//first
+//	var claculateBonus = function(performanceLevel,salary){
+//		if(performanceLevel==="S"){
+//			return salary * 4;
+//		}
+//		if(performanceLevel==="A"){
+//			return salary * 3;
+//		}
+//		if(performanceLevel==="B"){
+//			return salary * 2;
+//		}
+//	}
+
+//second 组合函数重构代码
+
+//	var performanceS = function(salary){
+//		return salary * 4;
+//	}
+//	var performanceA = function(salary){
+//		return salary * 3;
+//	}
+//	var performanceB = function(salary){
+//		return salary * 2;
+//	}
+//	var claculateBonus = function(performanceLevel,salary){
+//		if(performanceLevel === "S"){
+//			return performanceS(salary);
+//		}
+//		if(performanceLevel === "A"){
+//			return performanceA(salary);
+//		}
+//		if(performanceLevel === "B"){
+//			return performanceB(salary);
+//		}
+//	} 
+
+//third 使用策略模式重构代码
+var performanceS = function(){};
+var performanceA = function(){};
+var performanceB = function(){};
+
+performanceS.prototype.calculate = function(salary){
+	return salary * 4;
+}
+performanceA.prototype.calculate = function(salary){
+	return salary * 3;
+}
+performanceB.prototype.calculate = function(salary){
+	return salary * 2;
+}
+
+var Bouns = function(){
+	this.salary = null;
+	this.strategy = null;
+}
+Bouns.prototype.setSalary =function(salary){
+	this.salary = salary;
+}
+Bouns.prototype.setStrategy = function(strategy){
+	this.strategy = strategy;
+}
+
+Bouns.prototype.getBonus = function(){
+	return this.strategy.calculate(this.salary);
+}
+
+var bouns = new Bouns();
+bouns.setSalary(10000);
+bouns.setSalary(new performanceS()); //设置策略对象
+console.log(bouns.getBonus());  //40000
+
+
+
+
+</script>
+</body>
+</html>

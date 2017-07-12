@@ -5,7 +5,8 @@
 	<title>Document</title>
 </head>
 <body>
-	
+	<button id="loginBtn">login</button>
+	<button id="iframeBtn">iframe</button>
 <script>
 /*
 	单例模式
@@ -28,6 +29,7 @@
 //	}
 
 //second
+/*
 	var Singleton = function(name){
 		this.name =name;
 	};
@@ -43,6 +45,103 @@
 			return instance;
 		}
 	})
+*/
+
+//透明的单例模式
+/*
+var CreateDiv = (function(){
+	var instance;
+
+	var CreateDiv = function(html){
+		if( instance ){
+			return instance;
+		}
+		this.html = html;
+		this.init();
+		return instance = this;
+	};
+	CreateDiv.prototype.init = function(){
+		var div = document.createElement('div');
+		div.innerHTML = this.html;
+		document.body.append(div);
+	};
+	return CreateDiv;
+})();
+
+var a = new CreateDiv("seaseeyoul");
+var b = new CreateDiv("mogoethe");
+alert(a===b);
+*/
+
+//用代理实现单例模式
+/*
+var CreateDiv = function(html){
+	this.html = html;
+	this.init();
+};
+CreateDiv.prototype.init = function(){
+	var div = document.createElement('div');
+	div.innerHTML = this.html;
+	document.body.append(div);
+};
+
+var ProxySingletonCreateDiv = (function(){
+	var instance;
+	return function(html){
+		if(!instance){
+			instance = new CreateDiv(html); 
+		}
+		return instance;
+	}
+})();
+
+var a = new ProxySingletonCreateDiv("seaseeyoul");
+var b = new ProxySingletonCreateDiv("mogoethe");
+
+alert(a === b);
+
+*/
+
+//通用的惰性单例模式
+var getSingle = function(fn){
+	var result;
+	return function(){
+		return result || ( result = fn.apply(this,arguments));
+	}
+}
+
+var createLoginLawyer = function(){
+	var div = document.createElement("div");
+	div.innerHTML = "我是登陆窗口";
+	div.style.display = "none";
+	document.body.appendChild(div);
+	return div;
+};
+var createIframe = function(){
+	var iframe = document.createElement("iframe");
+	document.body.appendChild(iframe);
+	return iframe;
+}
+
+
+var createSingleLoginLawyer = getSingle(createLoginLawyer);
+var createSingIframe = getSingle(createIframe);
+
+
+document.getElementById("loginBtn").onclick = function(){
+	var loginLayer = createSingleLoginLawyer();
+	loginLayer.style.display = "block";
+}
+
+document.getElementById("iframeBtn").onclick = function(){
+	var liframeLayer = createSingIframe();
+	liframeLayer.src = "https://baidu.com";
+}
+
+
+
+
+
 
 </script>
 </body>
