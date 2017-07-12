@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+
+<script>
+/*
+	商城活动，预先缴纳500元，且返回50元现金券
+	预先缴纳200元，且返回20元现金券
+	不缴纳不保证能买到，无现金券
+*/
+
+//first
+/*
+	var order = function(orderType,pay,stock){
+		if(orderType === 1){
+			if(pay === true){
+				console.log('500元现金预购，得到50元优惠券');
+			}else{
+				if(stock > 0){
+					console.log("普通购买，无优惠券");
+				}else{
+					console.log("手机库存不足");
+				}
+			}
+		}
+		else if(orderType === 2){
+			if(pay === true){
+				console.log('200元现金预购，得到20元优惠券');
+			}else{
+				if(stock > 0){
+					console.log("普通购买，无优惠券");
+				}else{
+					console.log("手机库存不足");
+				}
+			}
+		}
+		else if(orderType === 3){
+			if(stock > 0){
+				console.log("普通购买，无优惠券");
+			}else{
+				console.log("手机库存不足");
+			}
+		}
+	}
+*/
+
+//second
+/*
+	var order500 = function(orderType,pay,stock){
+		if(orderType === 1 && pay === true){
+			console.log('500元现金预购，得到50元优惠券');
+		}else{
+			order200(orderType,pay,stock);
+		}
+	}
+	var order200 = function(orderType,pay,stock){
+		if(orderType === 2 && pay === true){
+			console.log('200元现金预购，得到20元优惠券');
+		}else{
+			orderNormal(orderType,pay,stock);
+		}
+	}
+	var orderNormal = function(orderType,pay,stock){
+		if(tock > 0){
+			console.log('普通订单，无优惠券');
+		}else{
+			console.log("库存不足");
+		}
+	}
+*/
+
+//third
+
+var order500 = function(orderType,pay,stock){
+	if(orderType === 1 && pay === true){
+		console.log('500元现金预购，得到50元优惠券');
+	}else{
+		return "nextSuccessor";
+	}
+}
+var order200 = function(orderType,pay,stock){
+	if(orderType === 2 && pay === true){
+		console.log('200元现金预购，得到20元优惠券');
+	}else{
+		return "nextSuccessor";
+	}
+}
+var orderNormal = function(orderType,pay,stock){
+	if(stock > 0){
+		console.log('普通订单，无优惠券');
+	}else{
+		console.log("库存不足");
+	}
+}
+
+var Chain = function(fn){
+	this.fn =fn;
+	this.successor = null;
+}
+Chain.prototype.setNextSuccessor = function(successor){
+	return this.successor = successor;
+}
+Chain.prototype.passRequest = function(){
+	var ret = this.fn.apply(this,arguments);
+	if(ret === "nextSuccessor"){
+		return this.successor && this.successor.passRequest.apply(this.successor,arguments);
+	}
+	return ret;
+}
+//包装为职责链
+var chainOrder500 = new Chain(order500);
+var chainOrder200 = new Chain(order200);
+var chainOrderNormal = new Chain(orderNormal);
+//设置顺序
+
+chainOrder500.setNextSuccessor(chainOrder200);
+chainOrder200.setNextSuccessor(chainOrderNormal);
+
+chainOrder500.passRequest(1,true,500);
+chainOrder500.passRequest(1,false,0);
+
+
+
+
+
+
+
+
+
+
+</script>
+
+</body>
+</html>
