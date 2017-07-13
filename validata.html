@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+
+<form action="http:eibook.cn/register" id="registerForm" method="post" >
+	请输入用户名：<input type="text" name="userName" /> <br />
+	请输入密码：<input type="text" name="password" /> <br />
+	请输入手机号码：<input type="text" name="phoneNumber" /> <br />
+	<input type="submit" value="提交">
+</form>
+
+<script>
+
+//first
+/*
+var registerForm = document.getElementById("registerForm");
+
+registerForm.onsubmit = function(){
+	if(registerForm.userName.value === ''){
+		alert("user name is can not null");
+		return false;
+	}
+
+	if(registerForm.password.value.length < 6){
+		alert("user password's length can not less 6");
+		return false;
+	}
+
+	if(!/(^1[3|5|8][0-9]{9}$)/.test(registerForm.phoneNumber.value)){
+		alert("the phone number is error");
+		return false;
+	}
+}
+*/
+
+var strategies = {
+	isNonEmpty:function(value,errorMsg){
+		if(value === ''){
+			return errorMsg;
+		}
+	},
+	minLength:function(value,length,errorMsg){
+		if(value.length < length){
+			return errorMsg;
+		}
+	},
+	isMobile:function(value,errorMsg){
+		if(!/(^1[3|5|8][0-9]{9})/.test(value)){
+			return errorMsg;
+		}
+	}
+};
+
+var Validator = function(){
+	this.cache = [];
+}
+
+Validator.prototype.add = function(dom,rules){
+	
+	var self = this;
+
+	for(var i=0,rule ; rule = rules[i++];){
+		(function(rule){
+			var strategyAry = rule.strategy.split(":");
+			var errorMsg = rule.errorMsg;
+
+			self.cache.push(function(){
+				var strategy = strategyAry.shift();
+				strategyAry.unshift(dom.value);
+				strategyAry.push(errorMsg);
+				return strategies[ strategy ].apply(dom,strategyAry);
+			})
+
+		})(rule)
+	}
+}
+
+Validator.prototype.start = function(){
+	for(var i=0,validatorFunc;validatorFunc = this.cache[i++];){
+		var errorMsg = validatorFunc();
+		if(errorMsg){
+			return errorMsg;
+		}
+	}
+}
+
+
+var registerForm = document.getElementById("registerForm");
+
+var validatorFunc = function(){
+	var validator = new Validator();
+
+	validator.add(registerForm.userName,[{
+		strategy:'isNonEmpty',
+		errorMsg:'用户名不能为空'
+	},{
+		strategy:'minLength:10',
+		errorMsg:'用户名长度不能低于10'
+	}])
+}
+
+registerForm.onsubmit = function(){
+	var errorMsg = validatorFunc();
+	console.log(errorMsg);
+	if(errorMsg){
+		alert(errorMsg);
+		return false;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+</body>
+</html>
