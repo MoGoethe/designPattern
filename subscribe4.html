@@ -18,7 +18,7 @@
 			this.clientList[ key ].push( fn );
 		},
 
-		tigger : function(){			//发布事件
+		trigger : function(){			//发布事件
 			var key = Array.prototype.shift.call(arguments),		//获取订阅事件的名称
 				fns = this.clientList[ key ];		//获取到函数
 
@@ -57,23 +57,35 @@
 				}
 				obj[i] = this[i];
 			}
-		},
+		}
 
 	}
 
+	var login = {}; //登录事件
+	event.installEvent(login);	//	添加到登录完成后的订阅事件中
 
-	var salesOffices = {};
-	event.installEvent(salesOffices);
+	setTimeout(function(){
 
-	salesOffices.listen('event1',function(price){
-		console.log("我是第一个订阅事件，携带的参数为：",price)
-	});
-	salesOffices.listen('event2',function(price){
-		console.log('我是第二个订阅事件，携带的参数为：',price);
-	});
+		login.trigger('loginSuccess',1000);
 
-	salesOffices.tigger('event1',1000);
-	salesOffices.tigger('event2',2000);
+	},2000);
+
+	var loginEvent1 = (function(){
+		login.listen('loginSuccess',function(data){
+			console.log('事件1处理');
+		})
+	})()
+	var loginEvent2 = (function(){
+		login.listen('loginSuccess',function(data){
+			console.log('事件2处理');
+		})
+	})()
+	var loginEvent3 = (function(){
+		login.listen('loginSuccess',function(data){
+			console.log('事件3处理');
+		})
+	})()
+
 
 </script>
 
