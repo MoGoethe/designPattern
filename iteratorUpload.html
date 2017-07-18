@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+<script>
+
+	function supportFlash(){
+		if(typeof window.ActiveXObject != "undefined"){
+			return new ActiveXObject("ShockwaveFlash.ShockwaveFlash");
+		}else{
+			return navigator.plugins['Shockwave Flash'];
+		}
+	}
+	
+	var getActiveUploadObj = function(){
+		try{
+			return new ActiveXObject("TXFTNActiveX.FTNUpload");
+		}catch(e){
+			return false;
+		}
+	};
+
+	var getFlashUploadObj = function(){
+		if(supportFlash()){
+			var str = '<object type="application/x-shockwave-flash"></object>';
+			return $( str ).appendTo($('body'));
+		}
+		return false;
+	}
+
+	var getFormloadObj = function(){
+		var str = '<input name="file" type="file" clss="ui-file" />'; //表单上传
+		return $( str ).appendTo( $('body') );
+	}
+
+	var iteratorUploadObj = function(){
+		for(var i=0,fn; fn = arguments[i++];){
+			var uploadObj = fn();
+			if(uploadObj !== false){
+				return uploadObj;
+			}
+		}
+	};
+
+	var uploadObj = iteratorUploadObj( getActiveUploadObj,getFlashUploadObj,getFormloadObj );
+
+	console.log(supportFlash());
+
+
+
+</script>
+
+</body>
+</html>

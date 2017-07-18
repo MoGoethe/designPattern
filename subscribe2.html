@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	
+<script>
+	
+	var salesOffices  = {};
+	salesOffices.clientList = [];
+
+	salesOffices.listen = function(key,fn){
+		if( !this.clientList[key] ){
+			this.clientList[key] = [];		//将事件名与事件关联起来
+		}
+		this.clientList[ key ].push( fn );
+	};
+
+	salesOffices.tigger = function(){			//发布事件
+		var key = Array.prototype.shift.call(arguments),		//获取订阅事件的名称
+			fns = this.clientList[ key ];		//获取到函数
+
+		if(!fns && fns.length === 0){
+			return false;
+		}
+
+		for(var i=0,fn;fn = fns[ i++ ];){
+			fn.apply(this,arguments);
+		}
+	}
+
+	salesOffices.listen('event1',function(price){
+		console.log("我是第一个订阅事件，携带的参数为：",price)
+	});
+	salesOffices.listen('event2',function(price){
+		console.log('我是第二个订阅事件，携带的参数为：',price);
+	});
+
+	salesOffices.tigger('event1',1000);
+	salesOffices.tigger('event2',2000);
+
+</script>
+
+</body>
+</html>
