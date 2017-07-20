@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+
+
+<script>
+	var Iterator = function( obj ){
+		var current = 0;
+
+		var next = function(){
+			return current += 1;
+		};
+
+		var isDone = function(){
+			return current >= obj.length;
+		};
+
+		var getCurrentItem = function(){
+			return obj[ current ];
+		};
+
+		return {
+			next:next,
+			isDone:isDone,
+			getCurrentItem: getCurrentItem
+		}
+	};
+//there is a bug
+	var compare = function(iterator1,iterator2){
+
+		while(!iterator1.isDone() && !iterator2.isDone()){
+			
+			if(iterator1.getCurrentItem() !== iterator2.getCurrentItem()){
+				return false;
+			}
+			iterator1.next();
+			iterator2.next();
+		}
+		return true;
+	};
+
+	var iterator1 = Iterator([1,2,3,4]);
+	var iterator2 = Iterator([1,2,3]);
+
+	console.log( compare(iterator1,iterator2) );
+
+</script>
+</body>
+</html>

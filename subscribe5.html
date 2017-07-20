@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	
+<script>
+var Subscribe = (function(){
+	var clientList = {},
+		listen,
+		trigger,
+		remove;
+
+	listen = function( key , fn ){
+		if(!clientList[ key ]){		//如果当前这个 key 的订阅事件不存在，
+			clientList[ key ] = [];	//则初始化一个空数组缓存订阅事件
+		}
+		clientList[key].push(fn);  //将当前事件添加到当前 key 的订阅事件列表中
+	};
+
+	trigger = function(){
+		var key = Array.prototype.shift.call(arguments),	//从参数中获取第一个参数
+			fns = clientList[ key ];	//从订阅的事件列表中获取所有的事件
+		if ( !fns || fns.length ===0 ){		//判断订阅事件列表是否为空,如果为空则直接返回
+			return false;
+		}
+		for(var i=0, fn; fn=fns[ i++ ];){
+			fn.apply(this,arguments);		//	传递进参数，调用这个函数
+		}
+	};
+
+	remove = function(key,fn){
+		var fns = clientList[ key ];	//从订阅的事件列表中获取到所有订阅事件
+		if( !fns ){
+			return false;		//如果为空则无订阅列表	
+		}
+		if( !fn ){
+			fns && (fns.length = 0);	//？？？
+		}else{
+			for(var l = fns.length-1; l>=0; l--){		
+			//遍历订阅事件列表，找到和当前函数相同的函数，从订阅事件里面移除这个事件
+				var _fn = fns[ l ];
+				if(_fn === fn){
+					fns.splice(l,1);
+				}
+			}
+		}
+	};
+
+	return {
+		listen:listen,
+		trigger:trigger,
+		remove:remove,
+	}
+
+}());
+
+Subscribe.listen('event1',function(price){
+	console.log(price);
+})
+
+setTimeout(function(){
+	Subscribe.trigger('event1',100001);
+},2000)
+
+
+
+</script>
+
+</body>
+</html>

@@ -70,21 +70,27 @@
 
 	},2000);
 
+	//事件处理类型一
 	var loginEvent1 = (function(){
 		login.listen('loginSuccess',function(data){
 			console.log('事件1处理');
 		})
-	})()
+	})();
+
+	//事件处理类型二
 	var loginEvent2 = (function(){
 		login.listen('loginSuccess',function(data){
 			console.log('事件2处理');
 		})
-	})()
+	})();
+
+	//事件处理类型三
 	var loginEvent3 = (function(){
 		login.listen('loginSuccess',function(data){
 			console.log('事件3处理');
 		})
-	})()
+	})();
+
 
 
 </script>
