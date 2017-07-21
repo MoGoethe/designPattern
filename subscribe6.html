@@ -7,12 +7,12 @@
 <body>
 	
 <script>
-var Event = (function(){
+var Subscribe = (function(){
       var global = this,
-            Event,
+            Subscribe,
             _default = 'default';
 
-      Event = function(){
+      Subscribe = function(){
             var _listen,
                   _trigger,
                   _remove,
@@ -47,7 +47,7 @@ var Event = (function(){
                                     }
                               }
                         }else{
-                              cache = [];  //不传递 fn 的参数则取消所有的订阅事件
+                              cache[key] = [];  //不传递 fn 的参数则取消所有的订阅事件
                         }
                   }
             };
@@ -81,7 +81,7 @@ var Event = (function(){
                                     }
 
                                     if( last === 'last' ){
-                                          offlineStack.length && offlineStack.popo()();
+                                          offlineStack.length && offlineStack.pop()();
                                     }else{
                                           each(offlineStack,function(){
                                                 this();
@@ -96,7 +96,7 @@ var Event = (function(){
                                     this.listen(key, fn, last);
                               },
 
-                              move: function(key, cache, fn){
+                              remove: function(key, fn){
                                     _remove(key, cache, fn);
                               },
 
@@ -141,20 +141,40 @@ var Event = (function(){
                   }
             }
       }();
-      return Event;
+      return Subscribe;
 }());
 
-console.log(Event);
-Event.listen('event1',function(price){
-      console.log(price);
+Subscribe.listen('event1',function(price){
+      console.log("执行一个事件1");
+});
+Subscribe.listen('event1',function(price){
+      console.log("执行一个事件1");
+});
+
+Subscribe.listen('event2',function(price){
+      console.log("执行一个事件2");
+});
+
+
+Subscribe.listen('event3',function(price){
+      console.log("执行一个事件3");
+});
+
+Subscribe.remove('event3')
+
+Subscribe.listen('event3',function(price){
+      console.log("执行一个事件3");
 })
 
 setTimeout(function(){
-      Event.trigger('event1',100001);
+      Subscribe.trigger('event1',100001);
+      Subscribe.trigger('event2',100002);
+      Subscribe.trigger('event3',100003);
+      Subscribe.trigger('event1',100002);
 },2000)
 
 
 </script>
-
+ 
 </body>
 </html>
